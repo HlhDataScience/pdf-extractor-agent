@@ -1,0 +1,26 @@
+repos:
+- repo: https://github.com/psf/black
+  rev: 24.10.0  # more recent version of black
+  hooks:
+  - id: black
+
+- repo: https://github.com/PyCQA/flake8
+  rev: 7.1.1  # newer version of flake8
+  hooks:
+  - id: flake8
+
+- repo: https://github.com/timothycrosley/isort
+  rev: 5.13.2  # latest stable version of isort
+  hooks:
+  - id: isort
+    args: ["--profile", "black"]
+- repo: https://github.com/econchick/interrogate
+  rev: 1.7.0  # newer version of interrogate
+  hooks:
+  - id: interrogate
+    args: [-vv, -i, --fail-under=80]
+- repo: https://github.com/astral-sh/uv-pre-commit
+  # uv version.
+  rev: 0.5.8
+  hooks:
+    - id: uv-lock
