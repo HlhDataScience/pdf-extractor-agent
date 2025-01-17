@@ -1,0 +1,1 @@
+"""pdf estructure extractor module"""
