@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from langchain_core.documents.base import Document
 
-from PdfExtractor import pdf_extractor
+from src.PdfExtractor import pdf_extractor
 
 
 class TestPDFExtractor(unittest.TestCase):
