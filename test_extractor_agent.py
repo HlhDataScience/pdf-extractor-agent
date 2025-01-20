@@ -8,7 +8,7 @@ from langchain_core.documents.base import Document
 from src.PdfExtractor import pdf_extractor
 
 
-class TestPDFExtractor(unittest.TestCase):
+class TestPDFExtractorAgent(unittest.TestCase):
     """This is a class updatable for every single function in order to test them with the commit stage."""
 
     def test_pdf_extractor(self, mock_loader):
@@ -43,5 +43,5 @@ class TestPDFExtractor(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.TextTestRunner().run(
-        unittest.TestLoader().loadTestsFromTestCase(TestPDFExtractor)
+        unittest.TestLoader().loadTestsFromTestCase(TestPDFExtractorAgent)
     )
