@@ -11,7 +11,6 @@ from src.PdfExtractor import pdf_extractor
 class TestPDFExtractor(unittest.TestCase):
     """This is a class updatable for every single function in order to test them with the commit stage."""
 
-    @patch("PdfExtractor.PyPDFLoader")  # Adjust the import path as necessary
     def test_pdf_extractor(self, mock_loader):
         """This function tests the pdf_extractor function of the app"""
         # Arrange
