@@ -24,3 +24,11 @@ repos:
   rev: 0.5.8
   hooks:
     - id: uv-lock
+
+- repo: local
+  hooks:
+    - id: run-tests
+      name: Run Tests
+      entry: uv run test_extractor_agent.py
+      language: system
+      stages: [pre-commit]
