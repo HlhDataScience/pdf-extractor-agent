@@ -5,12 +5,7 @@ from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 from src.LlmModel import extract_information, process_pdf
-from src.PydanticSchema import (
-    BigQueryEntry,
-    validate_list_length,
-    validate_non_empty_string,
-    validate_string_length,
-)
+from src.PydanticSchema import BigQueryEntry
 
 
 class TestLlmModelFunctions(unittest.TestCase):
@@ -27,10 +22,13 @@ class TestLlmModelFunctions(unittest.TestCase):
         self.valid_doc_data = {
             "document_id": "doc_2024_001",
             "title": "Example Document",
-            "date": "2024-01-21",
+            "publication_date": "2024-01-21",
             "authors": ["John Doe", "Jane Smith"],
+            "key_words": ["key1", "key2"],
             "key_points": ["First main point", "Second main point"],
             "summary": "A brief summary of the document content",
+            "methodology": "a brief description of tte methodology used",
+            "processed_timestamp": "2024-01-21T10:00:00.000Z",
         }
 
     @patch("src.LlmModel.PyPDFLoader")
@@ -63,7 +61,7 @@ class TestLlmModelFunctions(unittest.TestCase):
         # Assert
         self.assertIn("Error processing the pdf", result_state["error"])
 
-    @patch("src.LlmModel.ChatAnthropic")
+    @patch("src.LlmModel.ChatOpenAI")
     @patch("src.LlmModel.JsonOutputParser")
     @patch("src.LlmModel.ChatPromptTemplate")
     def test_extract_information_valid(
@@ -98,7 +96,7 @@ class TestLlmModelFunctions(unittest.TestCase):
             result_state["error"], "Error should be None for valid extraction"
         )
 
-    @patch("src.LlmModel.ChatAnthropic")
+    @patch("src.LlmModel.ChatOpenAI")
     def test_extract_information_error(self, mock_llm):
         """Test extracting information when LLM raises an error"""
         valid_text = "This is a valid document text."

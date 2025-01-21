@@ -117,10 +117,12 @@ class BigQueryEntry(BaseModel):
                 {
                     "document_id": "doc_2024_001",
                     "title": "Example Document",
-                    "date": "2024-01-21",
+                    "publication_date": "2024-01-21",
                     "authors": ["John Doe", "Jane Smith"],
+                    "key_words": ["key1", "key2"],
                     "key_points": ["First main point", "Second main point"],
                     "summary": "A brief summary of the document content",
+                    "methodology": "a brief description of the methodology used",
                     "processed_timestamp": "2024-01-21T10:00:00.000Z",
                 }
             ]
