@@ -7,10 +7,11 @@ requires-python = ">=3.11"
 dependencies = [
     "google-cloud-bigquery>=3.27.0",
     "jupyterlab>=4.3.4",
-    "langchain-anthropic>=0.3.3",
     "langchain-community>=0.3.14",
+    "langchain-openai>=0.3.1",
     "langgraph>=0.2.64",
     "mypy>=1.14.1",
+    "openai>=1.59.9",
     "pydantic>=2.10.5",
     "pypdf>=5.1.0",
     "streamlit>=1.41.1",

@@ -1,11 +1,11 @@
 """LLM model file"""
 
-from typing import Optional, TypedDict
+from typing import List, Optional, TypedDict
 
 from langchain.document_loaders import PyPDFLoader
-from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 
 from src.PydanticSchema import BigQueryEntry
 
@@ -13,18 +13,36 @@ from src.PydanticSchema import BigQueryEntry
 
 
 class State(TypedDict):
-    """Typed Dict that allow as to control the flow of the graph, as it represents the states for which the graph has to pass"""
+    """Typed Dict that allows us to control the flow of the graph, as it represents the states for which the graph has to pass"""
 
     pdf_text: str
     extracted_info: Optional[BigQueryEntry]
     error: Optional[str]
 
 
-# Redefined function to extract text from pdfs
+# Redefined function to extract text from PDFs
+def split_text_into_chunks(text: str, max_tokens: int = 8000) -> List[str]:
+    """
+    Splits text into smaller chunks that fit within the token limit.
+    """
+    chunks = []
+    words = text.split()
+    current_chunk = []
+
+    for word in words:
+        current_chunk.append(word)
+        if len(" ".join(current_chunk)) >= max_tokens:
+            chunks.append(" ".join(current_chunk))
+            current_chunk = []
+
+    if current_chunk:
+        chunks.append(" ".join(current_chunk))
+
+    return chunks
 
 
 def process_pdf(state: State, pdf_path: str) -> State:
-    """This function takes a pdf path and return a State class to be further processed by a LLM."""
+    """This function takes a PDF path and returns a State class to be further processed by an LLM."""
     try:
         loader = PyPDFLoader(file_path=pdf_path)
         docs = loader.load()
@@ -32,18 +50,16 @@ def process_pdf(state: State, pdf_path: str) -> State:
         state["pdf_text"] = text
         return state
     except Exception as e:
-        state["error"] = f"Error processing the pdf: {str(e)}"
+        state["error"] = f"Error processing the PDF: {str(e)}"
         return state
 
 
 def extract_information(state: State) -> State:
-    """This function takes the State class raw text and transform it into BigQuery formaTED ENTRIES WITH the help of llms"""
+    """This function takes the State class raw text and transforms it into BigQuery formatted entries with the help of LLMs."""
     if "error" in state and state["error"]:
         return state
     try:
-        llm = ChatAnthropic(
-            model="claude-3-sonnet-20240229", temperature=0, max_tokens=4000
-        )
+        llm = ChatOpenAI(model="chatgpt-4o-latest", temperature=0)
 
         parser = JsonOutputParser(pydantic_object=BigQueryEntry)
 
@@ -65,7 +81,7 @@ def extract_information(state: State) -> State:
         # Chain to be processed
         chain = prompt | llm | parser
 
-        # running the chain
+        # Running the chain
 
         result = chain.invoke(
             {
@@ -78,5 +94,5 @@ def extract_information(state: State) -> State:
         return state
 
     except Exception as e:
-        state["error"] = f"Error Extracting information: {str(e)}"
+        state["error"] = f"Error extracting information: {str(e)}"
         return state

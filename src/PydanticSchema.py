@@ -59,14 +59,22 @@ class BigQueryEntry(BaseModel):
 
     title: LongString = Field(description="The title of the document")
 
-    date: Annotated[
-        str, Field(description="The date of the document in YYYY-MM-DD format")
+    publication_date: Annotated[
+        str,
+        Field(
+            description="The date of publication of the document in YYYY-MM-DD format"
+        ),
     ]
 
     authors: Annotated[
         List[ShortString],
         Field(description="List of authors of the document"),
         AfterValidator(validate_list_length(100)),
+    ]
+    Key_words: Annotated[
+        List[ShortString],
+        Field(description="THe summary keywords of the document"),
+        AfterValidator(validate_list_length(50)),
     ]
 
     key_points: Annotated[
@@ -77,11 +85,15 @@ class BigQueryEntry(BaseModel):
 
     summary: VeryLongString = Field(description="A brief summary of the document")
 
+    methodology: VeryLongString = Field(
+        description=" a brief summary of the methodology used in the article."
+    )
+
     processed_timestamp: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
 
-    @field_validator("date")
+    @field_validator("publication_date")
     def validate_date(cls, v):
         """Check the date is correctly introduced"""
         try:
