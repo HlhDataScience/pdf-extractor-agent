@@ -76,13 +76,13 @@ def main():
             for file_name, result in results:
                 st.write(f"**{file_name}:**", result)
 
-                #    for result_name,  result in results:
+                # for result_name,  result in results:
 
-                #        load_data_to_bigquery(project_id=project_id, dataset_id=dataset_id, table_id= table_id, data= result["extracted_info"])
-                #        st.info(f"{result_name} successfully uploaded")
+                #    load_data_to_bigquery(project_id=project_id, dataset_id=dataset_id, table_id= table_id, data= result["extracted_info"])
+                #    st.info(f"{result_name} successfully uploaded")
                 #    del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
                 #    st.info("Data loaded to BigQuery")
-                st.success("Data successfully loaded.")
+                # st.success("Data successfully loaded.")
 
         except ValidationError as e:
             st.error(f"Validation error: {e}")
