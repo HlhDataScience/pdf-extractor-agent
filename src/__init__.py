@@ -1,1 +1,1 @@
-""" initializer for the main.py main program with streamlite"""
+""" initializer for the main.py main program with streamlit"""
