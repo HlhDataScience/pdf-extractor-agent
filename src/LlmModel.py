@@ -1,6 +1,6 @@
 """LLM model file"""
 
-from typing import List, Optional, TypedDict
+from typing import Dict, Optional, TypedDict
 
 from langchain.document_loaders import PyPDFLoader
 from langchain_core.output_parsers import JsonOutputParser
@@ -20,29 +20,8 @@ class State(TypedDict):
     error: Optional[str]
 
 
-# Redefined function to extract text from PDFs
-def split_text_into_chunks(text: str, max_tokens: int = 8000) -> List[str]:
-    """
-    Splits text into smaller chunks that fit within the token limit.
-    """
-    chunks = []
-    words = text.split()
-    current_chunk = []
-
-    for word in words:
-        current_chunk.append(word)
-        if len(" ".join(current_chunk)) >= max_tokens:
-            chunks.append(" ".join(current_chunk))
-            current_chunk = []
-
-    if current_chunk:
-        chunks.append(" ".join(current_chunk))
-
-    return chunks
-
-
 def process_pdf(state: State, pdf_path: str) -> State:
-    """This function takes a PDF path and returns a State class to be further processed by an LLM."""
+    """This function takes a config dict containing state and pdf_path and returns a State class."""
     try:
         loader = PyPDFLoader(file_path=pdf_path)
         docs = loader.load()
@@ -54,8 +33,9 @@ def process_pdf(state: State, pdf_path: str) -> State:
         return state
 
 
-def extract_information(state: State) -> State:
-    """This function takes the State class raw text and transforms it into BigQuery formatted entries with the help of LLMs."""
+def extract_information(config: Dict) -> State:
+    """This function takes the config dict containing state and returns an updated state."""
+    state = config["state"]
     if "error" in state and state["error"]:
         return state
     try:
