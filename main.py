@@ -2,6 +2,7 @@
 
 import os
 import tempfile
+from typing import List
 
 import streamlit as st
 from pydantic import ValidationError
@@ -24,32 +25,44 @@ def main():
         st.warning("Please enter your API key.")
         st.stop()
 
-    # Step 2: File Upload
-    uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
-    if uploaded_file is not None:
+    # Step 2: File Upload (Multiple PDFs)
+    uploaded_files = st.file_uploader(
+        "Upload PDF files", type=["pdf"], accept_multiple_files=True
+    )
+    if uploaded_files:
+        os.environ["OPENAI_API_KEY"] = api_key
+        results: List = []
+
         try:
-            # Validate the uploaded file
-            PDFValidator(file_name=uploaded_file.name)
+            for uploaded_file in uploaded_files:
+                # Validate the uploaded file
+                PDFValidator(file_name=uploaded_file.name)
 
-            temp_dir = tempfile.TemporaryDirectory()
-            temp_path = os.path.join(temp_dir.name, uploaded_file.name)
-            with open(temp_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+                # Save uploaded file temporarily
+                temp_dir = tempfile.TemporaryDirectory()
+                temp_path = os.path.join(temp_dir.name, uploaded_file.name)
+                with open(temp_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
 
-            os.environ["OPENAI_API_KEY"] = api_key
+                # Process with LangGraph
+                st.info(f"Processing {uploaded_file.name}...")
+                result = workflow_run(
+                    pdf_path=temp_path
+                )  # LangGraph will use the environment variable
+                results.append((uploaded_file.name, result))
 
-            st.info("Processing the PDF...")
-            result = workflow_run(
-                pdf_path=temp_path
-            )  # LangGraph will use the environment variable
-            st.info("PDF file processed.")
-            st.info("removing your file and API Key information from our system")
-            os.remove(temp_path)
-            temp_dir.cleanup()
+                # Cleanup: Delete the temporary file
+                os.remove(temp_path)
+                temp_dir.cleanup()
+
             # Cleanup: Delete the API key from the environment
             del os.environ["OPENAI_API_KEY"]
+
+            # Display Results
+            st.info("Deleting your files and API key from our system.")
             st.success("Processing complete!")
-            st.write("Result:", result)
+            for file_name, result in results:
+                st.write(f"**{file_name}:**", result)
 
         except ValidationError as e:
             st.error(f"Validation error: {e}")
