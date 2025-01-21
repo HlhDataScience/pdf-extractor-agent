@@ -1,6 +1,6 @@
 """Graph agent system"""
 
-from typing import Annotated, Dict, List
+from typing import Dict
 
 from langgraph.graph import Graph
 

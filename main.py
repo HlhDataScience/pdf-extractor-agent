@@ -6,7 +6,7 @@ import tempfile
 import streamlit as st
 from pydantic import ValidationError
 
-from src.BigQueryLoader import load_data_to_bigquery
+# from src.BigQueryLoader import load_data_to_bigquery
 from src.GraphModel import workflow_run
 from src.PydanticSchema import PDFValidator
 
