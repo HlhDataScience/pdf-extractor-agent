@@ -17,9 +17,10 @@ def validate_non_empty_string(v: str) -> str:
 
 
 def validate_string_length(max_length: int):
-    """Function that check we do not surpass the max_length limit for BigQuery format"""
+    """Wrapper for validate that check we do not surpass the max_length limit for BigQuery format"""
 
     def validate(v: str) -> str:
+        """This function checks we do not surpass the max_length limit for BigQuery format"""
         if len(v) > max_length:
             raise ValueError(f"String must not exceed {max_length} characters")
         return v
@@ -28,9 +29,10 @@ def validate_string_length(max_length: int):
 
 
 def validate_list_length(max_items: int):
-    """Function that check we do not surpass the max_length limit for BigQuery format"""
+    """wrapper for validate function"""
 
     def validate(v: List[str]) -> List[str]:
+        """Function that check we do not surpass the max_length limit for BigQuery format"""
         if len(v) > max_items:
             raise ValueError(f"List must not exceed {max_items} items")
         return v
@@ -128,3 +130,16 @@ class BigQueryEntry(BaseModel):
             ]
         }
     }
+
+
+class PDFValidator(BaseModel):
+    """Small validation class for the input of pdfs in the streamlit app."""
+
+    file_name: str
+
+    @field_validator("file_name")
+    def validate_pdf(cls, file_name: str) -> str:
+        """Simple conformity check for the pdf file"""
+        if not file_name.endswith(".pdf"):
+            raise ValueError("File must be a PDF.")
+        return file_name
