@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b06c5410-1d12-4aea-b51f-43553ecd5a71" name="Changes" comment="" />
+    <list default="true" id="b06c5410-1d12-4aea-b51f-43553ecd5a71" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/uv.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +30,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
     &quot;Python tests.Python tests for test.TestPDFExtractor.executor&quot;: &quot;Run&quot;,
     &quot;Python tests.Python tests in test.py.executor&quot;: &quot;Debug&quot;,
     &quot;Python tests.Python tests in test_extractor_agent.py.executor&quot;: &quot;Debug&quot;,
@@ -43,7 +50,23 @@
       <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in test_extractor_agent.py">
+  <component name="RunManager" selected="Docker.Dockerfile">
+    <configuration name="Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="astrafy-testting" />
+          <option name="containerName" value="test_1" />
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests for test_extractor_agent.TestPDFExtractor" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pdf-extractor-agent" />
       <option name="ENV_FILES" value="" />
@@ -76,6 +99,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.Dockerfile" />
         <item itemvalue="Python tests.Python tests in test_extractor_agent.py" />
         <item itemvalue="Python tests.Python tests for test_extractor_agent.TestPDFExtractor" />
       </list>
