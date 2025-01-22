@@ -104,7 +104,7 @@ from src import PDFValidator, workflow_run  # , load_data_to_bigquery
 #    st.info("Data loaded to BigQuery")
 # st.success("Data successfully loaded.")
 ```
-uncommenting this code will result in the use of the function `load_data_to_bigquery`. The app will prompt for your `Google Cloud Credentials` json credentials.
+uncommenting this code will result in the use of the function `load_data_to_bigquery`. The app will prompt for your `Google Cloud json credentials`.
 Once the app has finished processing the pdf research papers, it will upload them one by one, creating a `BigQuery` table.
 Once the app has done the process, the User API key is deleted from the app in order to preserve privacy. The json credentials as well.
 ### Upload and Deploy in Google Cloud
@@ -153,5 +153,5 @@ After careful review, the app have the following limitations:
 - To really **check the performance** of the model, we should use tools like [scalene](https://github.com/plasma-umass/scalene), which allows a **non-intrusive reading of the use of memory and performance of the code for later production states**.
 - Finally, we could use also [specialist](https://github.com/brandtbucher/specialist) to **check the bytecode** and improve the process of documents **checking which part of the python Bytecode has been specialized by the interpreter and which could benefit from it**.
 ## Author
-[Héctor López Hidalgo](https://github.com/HlhDataScience)
+[Héctor López Hidalgo](https://www.linkedin.com/in/hlh-generative-ai)
 
