@@ -5,6 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b06c5410-1d12-4aea-b51f-43553ecd5a71" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BigQueryLoader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/BigQueryLoader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GraphModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GraphModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LlmModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/LlmModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PydanticSchema.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PydanticSchema.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -1,11 +1,18 @@
-"""Module to load the data into BIg Query"""
+"""
+Module to load the data into BigQuery. It takes the dictionary output from the Graph and load it into a BigQuery Table
+using a predefined schema.
+it includes:
+1. The SCHEMA: design to be a static variable (Caps for that reason), takes the entries from the Graph and conform them
+to the schema expected by BigQuery Table.
+2.load_data_to_bigquery: THe function connected with the Google client and uploads the data into BIgQuery Tables.
+"""
 
 from typing import Dict
 
 from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 
-# Define schema statically
+# Define schema
 SCHEMA = [
     bigquery.SchemaField("document_id", "STRING", mode="REQUIRED"),
     bigquery.SchemaField("title", "STRING", mode="REQUIRED"),
@@ -19,18 +26,28 @@ SCHEMA = [
 ]
 
 
-def load_data_to_bigquery(project_id: str, dataset_id: str, table_id: str, data: Dict):
-    """
-    Loads data into a BigQuery table.
+def load_data_to_bigquery(
+    project_id: str, dataset_id: str, table_id: str, data: Dict
+) -> None:
+    """Loads data into a specified BigQuery table.
 
+    This function connects to Google BigQuery and loads the provided data into
+    the specified table. If the table does not exist, it will be created with
+    a predefined schema. The function also handles errors that may occur during
+    the insertion of data.
     Args:
-        project_id (str): Google Cloud project ID.
-        dataset_id (str): BigQuery dataset ID.
-        table_id (str): BigQuery table ID.
-        data (list of dict): The data to insert into the table.
-
+        project_id (str): The Google Cloud project ID where the BigQuery dataset resides.
+        dataset_id (str): The ID of the BigQuery dataset where the table is located.
+        table_id (str): The ID of the BigQuery table where the data will be inserted.
+        data (Dict): A dictionary containing the data to insert into the table.
+                     It is expected to have a key "extracted_info" that holds
+                     a list of dictionaries representing the rows to be inserted.
     Returns:
-        None
+        None: This function does not return a value. It prints messages indicating
+        the success or failure of the data insertion process.
+    Raises:
+        google.cloud.exceptions.NotFound: If the specified dataset or table does not exist
+        and cannot be created.
     """
     client = bigquery.Client(project=project_id)
 

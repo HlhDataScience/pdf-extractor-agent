@@ -6,30 +6,52 @@ import tempfile
 import streamlit as st
 from pydantic import ValidationError
 
-# from src.BigQueryLoader import load_data_to_bigquery
-from src.GraphModel import workflow_run
-from src.PydanticSchema import PDFValidator
+from src import PDFValidator, workflow_run  # , load_data_to_bigquery
 
 
 # Streamlit app
 def main():
-    """Main entry for the streamlit app"""
+    """Main entry point for the Streamlit PDF processing application.
+
+    This function initializes the Streamlit app, allowing users to upload PDF files
+    for processing. It handles user input for the OpenAI API key, validates uploaded
+    files, and processes each PDF using the LangGraph workflow. The results are displayed
+    to the user, and any temporary files are cleaned up after processing.
+    Steps:
+        1. User inputs their OpenAI API key.
+        2. User uploads one or more PDF files.
+        3. Each uploaded PDF is validated and processed.
+        4. Results are displayed, and temporary files are deleted.
+    Raises:
+        ValidationError: If the uploaded PDF file does not meet validation criteria.
+        Exception: If any other error occurs during processing.
+    Returns:
+        None: This function does not return a value. It interacts with the Streamlit
+        interface to display information and results to the user.
+    """
     st.title("LangGraph PDF Processor")
 
-    # Step 1: API Key Input and GC JSON credentials"
+    # Step 1: API Key Input and GC JSON credentials
     api_key = st.text_input(
         "Enter your OpenAI API Key (Don´t worry, we delete your info after the process):",
         type="password",
     )
-    if not api_key:
-        st.warning("Please enter your API key.")
-        st.stop()
+    if st.button(
+        "Submit API Key"
+    ):  # changed the logic to wait for the button widget, as the warning was displaying before the user had a chance to introduce the API Key.
+        if not api_key:
+            st.warning("Please enter your API key.")
+            st.stop()
+        else:
+            os.environ["OPENAI_API_KEY"] = api_key
+            st.success("API Key accepted!")
     # google_credentials_path = st.file_uploader(
     #        "Enter the path to your Google Cloud credentials JSON file:",
     #    )
-    #    if not google_credentials_path:
+    # if st.button("Submit Google Credentials json file"):
+    #   if not google_credentials_path:
     #       st.warning("Please provide the path to your Google Cloud credentials.")
-    #        st.stop()
+    #       st.stop()
 
     # Set Google Cloud credentials
     #    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_credentials_path
