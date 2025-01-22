@@ -12,7 +12,7 @@ from typing import Dict
 from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 
-# Define schema
+# Define schema for the table in BigQuery
 SCHEMA = [
     bigquery.SchemaField("document_id", "STRING", mode="REQUIRED"),
     bigquery.SchemaField("title", "STRING", mode="REQUIRED"),
@@ -49,10 +49,10 @@ def load_data_to_bigquery(
         google.cloud.exceptions.NotFound: If the specified dataset or table does not exist
         and cannot be created.
     """
-    client = bigquery.Client(project=project_id)
+    client = bigquery.Client(project=project_id)  # type: ignore
 
     # Create dataset reference
-    dataset_ref = bigquery.DatasetReference(dataset_id)
+    dataset_ref = bigquery.DatasetReference(dataset_id)  # type: ignore
 
     # Create table reference
     table_ref = dataset_ref.table(table_id)
