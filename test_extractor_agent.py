@@ -4,6 +4,10 @@ import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 
+from google.api_core.exceptions import NotFound
+from google.cloud import bigquery
+
+from src.BigQueryLoader import load_data_to_bigquery
 from src.LlmModel import extract_information, process_pdf
 from src.PydanticSchema import BigQueryEntry
 
@@ -131,7 +135,106 @@ class TestLlmModelFunctions(unittest.TestCase):
     # Other validation tests can follow...
 
 
+class TestBigQueryLoaderFunctions(unittest.TestCase):
+    """Tests for the load_data_to_bigquery function."""
+
+    def setUp(self):
+        """Set up test data that will be used across multiple tests"""
+        self.valid_data = {
+            "extracted_info": [
+                {
+                    "document_id": "doc_2024_001",
+                    "title": "Example Document",
+                    "publication_date": "2024-01-21",
+                    "authors": ["John Doe", "Jane Smith"],
+                    "key_words": ["key1", "key2"],
+                    "key_points": ["First main point", "Second main point"],
+                    "summary": "A brief summary of the document content",
+                    "methodology": "a brief description of the methodology used",
+                    "processed_timestamp": "2024-01-21T10:00:00.000Z",
+                }
+            ]
+        }
+
+        self.project_id = "test-project"
+        self.dataset_id = "test-dataset"
+        self.table_id = "test-table"
+
+    @patch("google.cloud.bigquery.Client")
+    def test_load_data_to_bigquery_success(self, mock_client):
+        """Test successful data insertion into BigQuery"""
+        mock_bq_client = MagicMock()
+        mock_client.return_value = mock_bq_client
+
+        # Mock the table reference and insertion
+        mock_table = MagicMock()
+        mock_bq_client.get_table.return_value = mock_table
+        mock_bq_client.insert_rows_json.return_value = []
+
+        # Act
+        load_data_to_bigquery(
+            self.project_id, self.dataset_id, self.table_id, self.valid_data
+        )
+
+        # Assert
+        mock_bq_client.insert_rows_json.assert_called_once_with(
+            mock_table, self.valid_data["extracted_info"]
+        )
+        print("Test successful data insertion passed")
+
+    @patch("google.cloud.bigquery.Client")
+    def test_create_table_if_not_exists(self, mock_client):
+        """Test that the table is created if it doesn't exist"""
+        mock_bq_client = MagicMock()
+        mock_client.return_value = mock_bq_client
+
+        # Mock NotFound exception for table
+        mock_bq_client.get_table.side_effect = NotFound("Table not found")
+
+        # Mock the table creation
+        mock_table = MagicMock()
+        mock_bq_client.create_table.return_value = mock_table
+
+        # Act
+        load_data_to_bigquery(
+            self.project_id, self.dataset_id, self.table_id, self.valid_data
+        )
+
+        # Assert
+        mock_bq_client.create_table.assert_called_once()
+        print("Test table creation passed")
+
+    @patch("google.cloud.bigquery.Client")
+    def test_insert_data_error(self, mock_client):
+        """Test the error handling when insert_rows_json fails"""
+        mock_bq_client = MagicMock()
+        mock_client.return_value = mock_bq_client
+
+        # Mock the table reference
+        mock_table = MagicMock()
+        mock_bq_client.get_table.return_value = mock_table
+
+        # Mock the insert_rows_json to return an error
+        mock_bq_client.insert_rows_json.return_value = [
+            {"index": 0, "errors": "Error occurred"}
+        ]
+
+        # Act
+        with self.assertLogs(level="INFO") as log:
+            load_data_to_bigquery(
+                self.project_id, self.dataset_id, self.table_id, self.valid_data
+            )
+
+        # Assert
+        self.assertIn("Errors occurred while inserting rows:", log.output[0])
+        print("Test data insertion error handling passed")
+
+
 if __name__ == "__main__":
-    unittest.TextTestRunner().run(
-        unittest.TestLoader().loadTestsFromTestCase(TestLlmModelFunctions)
+    suite = unittest.TestSuite()
+    suite.addTests(
+        unittest.TestLoader().loadTestsFromTestCase(TestBigQueryLoaderFunctions)
     )
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestLlmModelFunctions))
+
+    unittest.TextTestRunner().run(suite)
