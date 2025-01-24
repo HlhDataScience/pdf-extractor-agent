@@ -8,6 +8,31 @@ from pydantic import ValidationError
 
 from src import PDFValidator, workflow_run  # , load_data_to_bigquery
 
+""" # Collect the Google Cloud credentials and other inputs
+google_credentials_json = st.text_area("Enter your Google Cloud credentials JSON:", height=300)
+if st.button("Submit Google Credentials JSON file"):
+    if not google_credentials_json:
+        st.warning("Please provide the Google Cloud credentials JSON.")
+        st.stop()
+    try:
+        # Parse the JSON input
+        credentials = json.loads(google_credentials_json)
+        # Set environment variables based on parsed credentials
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials.get("client_email", "")
+        # Extracting project, dataset, and table IDs from the credentials JSON
+        project_id = credentials.get("project_id", "")
+        dataset_id = credentials.get("dataset_id", "")
+        table_id = credentials.get("table_id", "")
+        if not project_id or not dataset_id or not table_id:
+            st.warning("Please ensure that project_id, dataset_id, and table_id are provided in the JSON.")
+            st.stop()
+        # Display the extracted information
+        st.write(f"Project ID: {project_id}")
+        st.write(f"Dataset ID: {dataset_id}")
+        st.write(f"Table ID: {table_id}")
+    except json.JSONDecodeError:
+"""
+
 
 # Streamlit app
 def main():
@@ -45,32 +70,6 @@ def main():
         else:
             os.environ["OPENAI_API_KEY"] = api_key
             st.success("API Key accepted!")
-
-    """ # Collect the Google Cloud credentials and other inputs
-    google_credentials_json = st.text_area("Enter your Google Cloud credentials JSON:", height=300)
-    if st.button("Submit Google Credentials JSON file"):
-        if not google_credentials_json:
-            st.warning("Please provide the Google Cloud credentials JSON.")
-            st.stop()
-        try:
-            # Parse the JSON input
-            credentials = json.loads(google_credentials_json)
-            # Set environment variables based on parsed credentials
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials.get("client_email", "")
-            # Extracting project, dataset, and table IDs from the credentials JSON
-            project_id = credentials.get("project_id", "")
-            dataset_id = credentials.get("dataset_id", "")
-            table_id = credentials.get("table_id", "")
-            if not project_id or not dataset_id or not table_id:
-                st.warning("Please ensure that project_id, dataset_id, and table_id are provided in the JSON.")
-                st.stop()
-            # Display the extracted information
-            st.write(f"Project ID: {project_id}")
-            st.write(f"Dataset ID: {dataset_id}")
-            st.write(f"Table ID: {table_id}")
-        except json.JSONDecodeError:
-            st.error("The provided JSON is invalid. Please check your credentials.")
-    """
 
     # Step 2: File Upload (Multiple PDFs)
 
